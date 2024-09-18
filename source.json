@@ -1,0 +1,27 @@
+[
+  {
+    "url": "https://antifilter.download/list/allyouneed.lst",
+    "contentType": "DefaultList",
+    "category": "allyouneed"
+  },
+  {
+    "url": "https://antifilter.download/list/domains.lst",
+    "contentType": "DefaultList",
+    "category": "domains"
+  },
+  {
+    "url": "https://community.antifilter.download/list/community.lst",
+    "contentType": "DefaultList",
+    "category": "community"
+  },  
+  {
+    "url": "https://community.antifilter.download/list/domains.lst",
+    "contentType": "DefaultList",
+    "category": "community"
+  },
+  {
+    "url": "https://raw.githubusercontent.com/zapret-info/z-i/master/dump.csv",
+    "contentType": "CsvDumpAntizapret",
+    "category": "antizapret"
+  }
+]
