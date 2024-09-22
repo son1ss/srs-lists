@@ -85,8 +85,8 @@ func main() {
 		},
 	}
 
-	srsError := GenerateSRSList(ruleSet, "antifilter")
-	antizapretSrsError := GenerateSRSList(antizapretRuleSet, "antizapret")
+	srsError := GenerateSRSList(ruleSet, "af")
+	antizapretSrsError := GenerateSRSList(antizapretRuleSet, "az")
 
 	if srsError != nil {
 		fmt.Println("Ошибка при генерации SRS списка:", srsError)

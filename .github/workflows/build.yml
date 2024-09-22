@@ -34,7 +34,8 @@ jobs:
 
       - name: Generate sha256 hash
         run: |
-          sha256sum rules/aio.srs > rules/aio.srs.sha256sum
+          sha256sum rules/az.srs > rules/az.srs.sha256sum
+          sha256sum rules/af.srs > rules/af.srs.sha256sum
 
       - name: Release and upload assets
         run: |
