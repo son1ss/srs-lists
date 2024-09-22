@@ -1,7 +1,11 @@
 package parser
 
 import (
+	"bufio"
+	"fmt"
 	"net"
+	"os"
+	"regexp"
 	"strings"
 )
 
@@ -53,4 +57,46 @@ func GetIPNetwork(ip net.IP) net.IPNet {
 	mask = net.CIDRMask(128, 128) // уменьшаем маску на 1 бит для хоста
 	network = net.IPNet{IP: ip, Mask: mask}
 	return network
+}
+
+func ReadRegexFile(filePath string) ([]*regexp.Regexp, error) {
+	// Читаем файл filePath
+	file, err := os.Open(filePath)
+	if err != nil {
+		return nil, err
+	}
+	defer file.Close()
+
+	// Переменная со строками для результата
+	var regex []*regexp.Regexp
+
+	// Запускаем чтение файла построчно
+	scanner := bufio.NewScanner(file)
+	for scanner.Scan() {
+		line := scanner.Text()
+		// Пропускаем комментарии
+		if strings.HasPrefix(line, "#") {
+			continue
+		}
+		// Пропускаем пустые строки
+		if len(line) == 0 {
+			continue
+		}
+
+		// Компилируем полученную регулярку
+		rx, err := regexp.Compile(line)
+		if err != nil {
+			fmt.Println(err)
+			continue
+		}
+
+		// Если удачно, добавляем регулярку в исключающий массив
+		regex = append(regex, rx)
+	}
+
+	if err := scanner.Err(); err != nil {
+		return nil, err
+	}
+
+	return regex, nil
 }

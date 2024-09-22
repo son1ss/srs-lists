@@ -18,6 +18,8 @@ type Source struct {
 func main() {
 	var ips []string
 	var domains []string
+	var antizapretIps []string
+	var antizapretDomains []string
 
 	data, err := os.ReadFile("./source.json")
 	if err != nil {
@@ -41,9 +43,13 @@ func main() {
 
 		switch strings.ToLower(source.ContentType) {
 		case "csvdumpantizapret":
-			ips, domains = parser.ParseCsvDumpAntizapret(string(data))
+			newIps, newDomains := parser.ParseCsvDumpAntizapret(string(data))
+			antizapretIps = append(antizapretIps, newIps...)
+			antizapretDomains = append(antizapretDomains, newDomains...)
 		case "defaultlist":
-			ips, domains = parser.ParseDefaultList(string(data))
+			newIps, newDomains := parser.ParseDefaultList(string(data))
+			ips = append(ips, newIps...)
+			domains = append(domains, newDomains...)
 		default:
 			fmt.Printf("Unsupported content type: %s\n", source.ContentType)
 			continue
@@ -59,15 +65,34 @@ func main() {
 		Version: 1,
 		Rules: []Rule{
 			{
-				Domain:       parser.UniqueSlice(ruleSetDomains),
-				DomainSuffix: parser.UniqueSlice(ruleSetDomainSuffixes),
-				IPCIDR:       parser.UniqueSlice(ips),
+				Domain:       ruleSetDomains,
+				DomainSuffix: ruleSetDomainSuffixes,
+				IPCIDR:       ips,
 			},
 		},
 	}
 
-	srsError := GenerateSRSList(ruleSet)
+	antizapretRuleSetDomains, antizapretRuleSetDomainSuffixes := parser.SeparateDomainsAndSuffixes(antizapretDomains)
+
+	antizapretRuleSet := RuleSet{
+		Version: 1,
+		Rules: []Rule{
+			{
+				Domain:       antizapretRuleSetDomains,
+				DomainSuffix: antizapretRuleSetDomainSuffixes,
+				IPCIDR:       antizapretIps,
+			},
+		},
+	}
+
+	srsError := GenerateSRSList(ruleSet, "antifilter")
+	antizapretSrsError := GenerateSRSList(antizapretRuleSet, "antizapret")
+
 	if srsError != nil {
 		fmt.Println("Ошибка при генерации SRS списка:", srsError)
+	}
+
+	if antizapretSrsError != nil {
+		fmt.Println("Ошибка при генерации SRS списка для Antizapret:", antizapretSrsError)
 	}
 }

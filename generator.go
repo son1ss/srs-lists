@@ -9,7 +9,7 @@ import (
 	"github.com/sagernet/sing-box/option"
 )
 
-func GenerateSRSList(ruleSet RuleSet) error {
+func GenerateSRSList(ruleSet RuleSet, fileName string) error {
 	// Переводим итоговый rule-set в json
 	jsonData, err := json.Marshal(ruleSet)
 	if err != nil {
@@ -36,7 +36,7 @@ func GenerateSRSList(ruleSet RuleSet) error {
 	}
 
 	// Создаём .srs файл
-	RuleSetSrs, err := os.Create("./rules/aio.srs")
+	RuleSetSrs, err := os.Create("./rules/" + fileName + ".srs")
 	if err != nil {
 		return fmt.Errorf("cannot create .srs file: %v", err)
 	}

@@ -18,6 +18,12 @@ func ParseCsvDumpAntizapret(input string) ([]string, []string) {
 	var ipAddresses []string
 	var domains []string
 
+	regexes, err := ReadRegexFile("./antizapret-exclude.rgx")
+
+	if err != nil {
+		fmt.Printf("Failed to read regex file: %v \n", err)
+	}
+
 	// Декодируем входную строку из Windows-1251 в UTF-8
 	decoder := charmap.Windows1251.NewDecoder()
 	decodedInput, _ := decoder.String(input)
@@ -38,16 +44,28 @@ func ParseCsvDumpAntizapret(input string) ([]string, []string) {
 			if ip == "" {
 				continue
 			}
-			if !strings.Contains(ip, "/") {
-				ip += "/32"
-			}
 			ipAddresses = append(ipAddresses, ip)
 		}
 
 		// Если есть второй столбца, извлекаем домены из нее
 		if len(columns) > 1 {
-			domainMatches := strings.Split(columns[1], "|")
-			domains = append(domains, domainMatches...)
+			// domainMatches := strings.Split(columns[1], "|")
+			// Говеная реализация фильтров по регексам. Не пролезаем по размеру списка
+			for _, domainMatch := range strings.Split(columns[1], "|") {
+				exclude := false
+				for _, regex := range regexes {
+					if regex.MatchString(domainMatch) {
+						exclude = true
+						break
+					}
+				}
+
+				if !exclude {
+					domains = append(domains, domainMatch)
+				}
+			}
+
+			// domains = append(domains, domainMatches...)
 		}
 	}
 
