@@ -50,6 +50,10 @@ func main() {
 			newIps, newDomains := parser.ParseDefaultList(string(data))
 			ips = append(ips, newIps...)
 			domains = append(domains, newDomains...)
+		case "list":
+			newIps := parser.ParseList(string(data))
+
+			ips = append(ips, newIps...)
 		default:
 			fmt.Printf("Unsupported content type: %s\n", source.ContentType)
 			continue
