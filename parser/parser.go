@@ -127,7 +127,9 @@ func ParseList(input string) []string {
 			continue
 		}
 
-		tempLine := line[:len(line)-1] + "/32"
+		tempLine := line + "/32"
+
+		fmt.Println(tempLine)
 
 		// Извлекаем IPv4-адрес
 		if rgxIPv4.MatchString(tempLine) {
