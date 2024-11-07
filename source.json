@@ -25,6 +25,11 @@
     "category": "community"
   },
   {
+    "url": "https://raw.githubusercontent.com/GhostRooter0953/discord-voice-ips/refs/heads/master/main_domains/discord-main-ip-list",
+    "contentType": "List",
+    "category": "community"
+  },
+  {
     "url": "https://raw.githubusercontent.com/zapret-info/z-i/master/dump.csv",
     "contentType": "CsvDumpAntizapret",
     "category": "antizapret"
